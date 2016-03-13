@@ -1,0 +1,45 @@
+grammar Grammar
+    include Expression
+
+    rule main
+        (whitespace* main_element whitespace*)* <Main>
+    end
+
+    rule main_element
+        line_comment / function_declaration / function_body_element
+    end
+
+    rule chained_elements
+        ( line_comment / function_body_element )
+        (whitespace+ (function_body_element / line_comment))*
+        <ChainedElement>
+    end
+
+    rule function_body
+        line_comment* whitespace*
+        function_body_element
+        (whitespace+ (function_body_element / line_comment))* <FunctionBody>
+    end
+
+    rule function_body_element
+        return / if_statement / for_loop / variable_declaration / block_element
+    end
+
+    rule block_element
+        function_call / array / assignment / boolean_expression / expression / string
+    end
+
+    rule line_comment
+        whitespace* '#' ( !end_line . )* &end_line <LineComment>
+    end
+
+    rule function_declaration
+        'fun' whitespace+ identifier whitespace+
+        'does' whitespace+ (function_body whitespace+)?
+        'with' whitespace+ (parameters / 'none') <FunctionDeclaration>
+    end
+
+    rule function_call
+        identifier '(' whitespace* function_call_parameters? whitespace* ')' <FunctionCall>
+    end
+end

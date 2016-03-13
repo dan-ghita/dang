@@ -15,9 +15,16 @@ body {
   background-color: #2E2F30;
 }
 
-textarea {
+#code-editor {
   height: 100%;
   background-color: black;
   color: green;
   font-size: large;
+}
+
+#code-result {
+  margin-top: 50px;
+  min-height: 200px;
+  padding: 20px;
+  background-color: #999899;
 }

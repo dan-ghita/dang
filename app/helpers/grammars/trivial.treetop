@@ -1,0 +1,70 @@
+grammar Types
+    rule int
+         '0' <Integer> / '-'? digit+ <Integer>
+    end
+
+    rule string
+        '"' ([^"\\] / "\\" . )* '"' <String>
+    end
+
+    rule bool
+        'true' <Bool> / 'false' <Bool>
+    end
+
+    rule array
+        '[' whitespace*  array_content? whitespace* ']' <Array> / range
+    end
+
+    rule range
+        identifier_or_int whitespace+ 'to' whitespace+ identifier_or_int <Range>
+    end
+
+    rule array_content
+        (int whitespace* ',' whitespace*)* int /
+        (string whitespace* ',' whitespace*)* string /
+        (bool whitespace* ',' whitespace*)* bool /
+        (array whitespace* ',' whitespace*)* array
+    end
+
+    rule function_call_parameters
+        function_call_parameter (whitespace* ','  whitespace* function_call_parameter )* <FunctionCallParameters>
+    end
+
+    rule function_call_parameter
+        block_element
+    end
+
+    rule parameters
+        identifier (whitespace+ 'and' whitespace+ identifier)* <Parameters>
+    end
+
+    rule whitespace
+        [\t\s\n]
+    end
+
+    rule end_line
+        [\n]
+    end
+
+    rule identifier
+        !(reserved_words whitespace+) letter (letter / '_' / digit)* <Identifier>
+    end
+
+    rule letter
+        [a-zA-Z]
+    end
+
+    rule digit
+        [0-9]
+    end
+
+    rule reserved_words
+        'return' / 'fun' / 'does' / 'with' / 'int' / 'string' / 'when' / 'then' /
+        'otherwise' / 'ow' / 'select' / 'from' / 'where' / 'do' / 'true' / 'false' /
+        'to' / 'none' / 'define' / 'as' / 'and' / 'return' / 'end' / 'if' / 'else' / 'for'
+    end
+
+    rule identifier_or_int
+        int / identifier
+    end
+end
