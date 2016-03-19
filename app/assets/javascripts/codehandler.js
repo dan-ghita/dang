@@ -17,25 +17,23 @@ $(document).ready(function () {
         });
     }
 
-    function runCode(code) {
+    function runCode() {
         $.ajax({
             url: "http://localhost:3000/ide/eval",
             type: "GET",
-            data: {code: code},
+            data: {code: editor.getValue()},
             dataType: "json",
             complete: codeEvalResultHandler
         });
     }
 
     $("#run-code").click(function () {
-        var code = $("#code-editor").val();
-        runCode(code);
+        runCode();
     });
 
     $(document).keypress(function(e) {
         if(e.ctrlKey && (e.which == 10)) {
-            var code = $("#code-editor").val();
-            runCode(code);
+            runCode();
         }
     });
 });
