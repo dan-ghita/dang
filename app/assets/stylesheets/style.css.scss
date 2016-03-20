@@ -15,16 +15,53 @@ body {
   background-color: #2E2F30;
 }
 
-//#code-editor {
-//  height: 100%;
-//  background-color: black;
-//  color: green;
-//  font-size: large;
-//}
-
 #code-result {
   margin-top: 50px;
   min-height: 200px;
   padding: 20px;
   background-color: #999899;
 }
+
+#settings-drawer {
+  display: block;
+  position: fixed;
+  z-index: 5;
+  transform: translate(-100%);
+  transition: transform .3s;
+  background-color: #374c5d;
+  box-shadow: 4px 0px 15px 1px rgba(18,112,6,0.73);
+  //  border: dashed 3px red;
+}
+
+#settings-drawer-button {
+  margin-top: 10px;
+  margin-left: 10px;
+  font-size: 3.5em;
+  border-radius: 100px;
+  position: fixed;
+  z-index: 6;
+  background-color: transparent;
+  color: #F7F7F7;
+  border: none;
+}
+
+#checkbox-settings {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 3em;
+  font-size: 2em;
+  color: #229922;
+}
+
+.settings-switch {
+  float: right;
+  display: inline;
+  margin-right: 0px;
+}
+
+
+
+
+
+

@@ -1,17 +1,26 @@
 $(document).ready(function () {
-    function codeEvalResultHandler( response ){
+    $("[name='switch']").bootstrapSwitch();
+
+    var myTextarea = document.getElementById("code-editor");
+    var editor = CodeMirror.fromTextArea(myTextarea, {
+        lineNumbers: true,
+        mode: "dang",
+        theme: "icecoder"
+    });
+
+    function codeEvalResultHandler(response) {
         console.warn(response);
 
         var output = response.responseJSON;
 
         $("#code-result").html('');
-        $.each(output, function(i, result) {
-            var div = $("<div>")
+        $.each(output, function (i, result) {
+            var div = $("<div>");
 
             div.html(result);
 
-            if(result.indexOf('[x]') == 0)
-                div.css('color', 'red');
+            if (result.indexOf('[x]') == 0 || result.indexOf('Expected') == 0)
+                div.css('color', '#D60303');
 
             $("#code-result").append(div);
         });
@@ -27,13 +36,32 @@ $(document).ready(function () {
         });
     }
 
+
+    // --> Event handling <--
+
+    function handleCtrlKeyEvents(e) {
+        if (e.which == 13)
+            runCode();
+        else if (e.which == 83)
+            e.preventDefault();
+
+    }
+
+    $("#settings-drawer-button").hover(function () {
+        $("#settings-drawer").css("transform", "translate(0)");
+    });
+
+    $("#settings-drawer").mouseleave(function () {
+        $("#settings-drawer").css("transform", "translate(-100%)");
+    });
+
+
     $("#run-code").click(function () {
         runCode();
     });
 
-    $(document).keypress(function(e) {
-        if(e.ctrlKey && (e.which == 10)) {
-            runCode();
-        }
+    $(document).keydown(function (e) {
+        if (e.ctrlKey)
+            handleCtrlKeyEvents(e);
     });
 });
