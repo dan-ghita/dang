@@ -22,34 +22,59 @@ body {
   background-color: #999899;
 }
 
-#settings-drawer {
+.drawer {
+  position: absolute;
   display: block;
-  position: fixed;
   z-index: 5;
-  transform: translate(-100%);
   transition: transform .3s;
   background-color: #374c5d;
-  box-shadow: 4px 0px 15px 1px rgba(18,112,6,0.73);
-  //  border: dashed 3px red;
 }
 
-#settings-drawer-button {
+#settings-drawer {
+  transform: translate(-100%);
+  box-shadow: 4px 0px 15px 2px rgba(18,112,6,0.73);
+}
+
+#file-drawer {
+  right: 0;
+  transform: translate(100%);
+  box-shadow: -4px 0px 15px 2px rgba(227,98,12,1);
+}
+
+.drawer-button {
+  position: absolute;
   margin-top: 10px;
-  margin-left: 10px;
   font-size: 3.5em;
   border-radius: 100px;
-  position: fixed;
   z-index: 6;
   background-color: transparent;
   color: #F7F7F7;
   border: none;
 }
 
+#settings-drawer-button {
+  left: 10px;
+}
+
+#file-drawer-button {
+  float: right;
+  right: 10px;
+}
+
+.settings-drawer-content {
+  margin-top: 6em;
+  text-align: center;
+}
+
+.file-drawer-content {
+  margin-top: 3em;
+  text-align: center;
+}
+
 #checkbox-settings {
   list-style-type: none;
   padding: 0;
   margin: 0;
-  margin-top: 3em;
   font-size: 2em;
   color: #229922;
 }
@@ -60,7 +85,31 @@ body {
   margin-right: 0px;
 }
 
+#notification {
+  position: relative;
+  left: 0;
+  right: 0;
+  top: 0em;
+  z-index: 7;
+  background-color: #730E15;
+  color: #FFF;
+  padding: 0.6em 0;
+  text-align: center;
+  box-shadow: 0 -0.1em 2em -1em #000 inset;
+}
 
+#signup-form {
+  color: #999999;
+  display: none;
+}
+
+#signin-form {
+  color: #999999;
+}
+
+.access-button {
+  margin-top: 10px;
+}
 
 
 

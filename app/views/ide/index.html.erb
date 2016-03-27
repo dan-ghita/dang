@@ -1,30 +1,98 @@
-<button id="settings-drawer-button">
+<button class="drawer-button" id="settings-drawer-button">
   <span class="fa fa-cog"></span>
 </button>
-<nav class="col-md-3 fill" id="settings-drawer">
-  <ul id="checkbox-settings">
-  <hr>
-    <li>
-      Tab size
-      <div class="settings-switch">
-        <input type="checkbox" name="switch" /><br />
-      </div>
-    </li>
-    <li>
-      Auto indentation
-      <div class="settings-switch">
-        <input type="checkbox" name="switch" /><br />
-      </div>
-    </li>
-    <li>
-      Editor theme
-      <div class="settings-switch">
-        <input type="checkbox" name="switch" /><br />
-      </div>
-    </li>
-  </ul>
+<nav class="col-md-3 fill drawer" id="settings-drawer">
+  <div class="settings-drawer-content">
+    <hr>
+    <ul id="checkbox-settings">
+        <li>
+          Tab size
+          <div class="settings-switch">
+            <input type="checkbox" name="switch" /><br />
+          </div>
+        </li>
+        <li>
+          Auto indentation
+          <div class="settings-switch">
+            <input type="checkbox" name="switch" /><br />
+          </div>
+        </li>
+        <li>
+          Editor theme
+          <div class="settings-switch">
+            <input type="checkbox" name="switch" /><br />
+          </div>
+        </li>
+      </ul>
+  </div>
 </nav>
 
+<button class="drawer-button" id="file-drawer-button">
+  <span class="fa fa-folder"></span>
+</button>
+<nav class="col-md-3 fill drawer" id="file-drawer">
+  <% current_user = session[:username] %>
+  <% if current_user %>
+      <%= button_to 'Sign Out', {:controller => 'access', :action => 'logout'}, {class: 'btn btn-danger access-button'}  %>
+      <!-- display file picker here -->
+  <% else %>
+      <button type="button" class="btn btn-success access-button" id="signup-button">Sign Up</button>
+      <button type="button" class="btn btn-success access-button" id="signin-button">Sign In</button>
+  <% end %>
+  <div class="file-drawer-content">
+    <hr>
+    <% if current_user %>
+    <!-- display file picker here -->
+    <% else %>
+        <div id="signup-form">
+          <%= form_for @user, :url => {:controller => 'users', :action => 'create'} do |f| %>
+              <p>
+                <%= f.label :first_name %><br>
+                <%= f.text_field :first_name %>
+              </p>
+              <p>
+                <%= f.label :last_name %><br>
+                <%= f.text_field :last_name %>
+              </p>
+              <p>
+                <%= f.label :email %><br>
+                <%= f.text_field :email %>
+              </p>
+              <p>
+                <%= f.label :password %><br>
+                <%= f.password_field :password %>
+              </p>
+              <p>
+                <%= f.label :password_confirmation %><br>
+                <%= f.password_field :password_confirmation %>
+              </p>
+
+              <p class="submit">
+                <%= f.submit 'Sign Up', :class => 'btn btn-primary' %>
+              </p>
+        <% end %>
+        </div>
+        <div id="signin-form">
+          <%= form_tag(:controller => 'access', :action => 'login') do %>
+              <p>
+                <%= label_tag(:username) %>
+                <%= text_field_tag(:username, '', :required => true) %>
+              </p>
+
+              <p>
+                <%= label_tag(:password) %>
+                <%= password_field_tag(:password, '', :required => true) %>
+              </p>
+
+              <p class='submit login'>
+                <%= submit_tag 'Sign In', :class => 'btn btn-primary' %>
+              </p>
+          <% end %>
+        </div>
+  <% end %>
+
+  </div>
+</nav>
 
 <div class="container fill vert-offset-top-2">
   <div class="jumbotron fill" style="background-color: floralwhite">

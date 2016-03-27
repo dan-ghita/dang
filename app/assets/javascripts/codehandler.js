@@ -29,7 +29,7 @@ $(document).ready(function () {
     function runCode() {
         $.ajax({
             url: "http://localhost:3000/ide/eval",
-            type: "GET",
+            type: "POST",
             data: {code: editor.getValue()},
             dataType: "json",
             complete: codeEvalResultHandler
@@ -55,6 +55,17 @@ $(document).ready(function () {
         $("#settings-drawer").css("transform", "translate(-100%)");
     });
 
+    $("#file-drawer-button").hover(function () {
+        $("#file-drawer").css("transform", "translate(0)");
+        $("#file-drawer-button").find("span").removeClass("fa-folder");
+        $("#file-drawer-button").find("span").addClass("fa-folder-open");
+    });
+
+    $("#file-drawer").mouseleave(function () {
+        $("#file-drawer").css("transform", "translate(100%)");
+        $("#file-drawer-button").find("span").removeClass("fa-folder-open");
+        $("#file-drawer-button").find("span").addClass("fa-folder");
+    });
 
     $("#run-code").click(function () {
         runCode();
