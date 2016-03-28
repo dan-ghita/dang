@@ -8,6 +8,14 @@ $(document).ready(function () {
         theme: "icecoder"
     });
 
+    function notify( message ) {
+        $('#notification').html( message );
+        $('#notification').fadeIn('fast');
+        setTimeout(function() {
+            $('#notification').fadeOut('fast');
+        }, 2000);
+    }
+
     function codeEvalResultHandler(response) {
         console.warn(response);
 
@@ -26,6 +34,16 @@ $(document).ready(function () {
         });
     }
 
+    function saveDocumentHandler(response) {
+        console.warn(response);
+
+        var output = response.responseJSON;
+
+        $('#document-title').html(output.name);
+
+        notify(output.message);
+    }
+
     function runCode() {
         $.ajax({
             url: "http://localhost:3000/ide/eval",
@@ -36,16 +54,50 @@ $(document).ready(function () {
         });
     }
 
+    function saveNewDocument( name ) {
+        $.ajax({
+            url: "http://localhost:3000/documents/create",
+            type: "POST",
+            data: {name: name, code: editor.getValue()},
+            dataType: "json",
+            complete: saveDocumentHandler
+        });
+    }
+
+    function saveDocument( name ) {
+        //$.ajax({
+        //    url: "http://localhost:3000/documents/edit",
+        //    type: "PUT",
+        //    data: {code: editor.getValue()},
+        //    dataType: "json",
+        //    complete: codeEvalResultHandler
+        //});
+    }
+
+    function handleSaveEvent() {
+        var name = $('#document-title').text();
+        if( name == '' || name.length == 0) {
+            $('#save-document-popup').css('display', 'block');
+        } else {
+            saveDocument( name );
+        }
+    }
 
     // --> Event handling <--
 
     function handleCtrlKeyEvents(e) {
         if (e.which == 13)
             runCode();
-        else if (e.which == 83)
+        else if (e.which == 83) {
             e.preventDefault();
-
+            handleSaveEvent();
+        }
     }
+
+    $(document).keydown(function (e) {
+        if (e.ctrlKey)
+            handleCtrlKeyEvents(e);
+    });
 
     $("#settings-drawer-button").hover(function () {
         $("#settings-drawer").css("transform", "translate(0)");
@@ -67,12 +119,18 @@ $(document).ready(function () {
         $("#file-drawer-button").find("span").addClass("fa-folder");
     });
 
-    $("#run-code").click(function () {
-        runCode();
+    $('#save-script-button').click(function(){
+        var name = $('#file-name').val();
+        console.error(name);
+        if( name == '' || name.length == 0)
+            alert("File name can't be empty");
+        else {
+            saveNewDocument( name );
+            $('#save-document-popup').css('display', 'none');
+        }
     });
 
-    $(document).keydown(function (e) {
-        if (e.ctrlKey)
-            handleCtrlKeyEvents(e);
+    $("#run-code").click(function () {
+        runCode();
     });
 });

@@ -12,4 +12,6 @@ class User < ActiveRecord::Base
             :uniqueness => true,
             :format => { :with => EMAIL_REGEX },
             :confirmation => true
+
+  has_many :documents
 end

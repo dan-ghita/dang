@@ -34,7 +34,6 @@
   <% current_user = session[:username] %>
   <% if current_user %>
       <%= button_to 'Sign Out', {:controller => 'access', :action => 'logout'}, {class: 'btn btn-danger access-button'}  %>
-      <!-- display file picker here -->
   <% else %>
       <button type="button" class="btn btn-success access-button" id="signup-button">Sign Up</button>
       <button type="button" class="btn btn-success access-button" id="signin-button">Sign In</button>
@@ -42,7 +41,12 @@
   <div class="file-drawer-content">
     <hr>
     <% if current_user %>
-    <!-- display file picker here -->
+        <% @files.each do |file| %>
+            <div class="col-md-12 file">
+              <%= file.name %><br>
+              <%= file.updated_at %>
+            </div>
+        <% end %>
     <% else %>
         <div id="signup-form">
           <%= form_for @user, :url => {:controller => 'users', :action => 'create'} do |f| %>
@@ -96,6 +100,7 @@
 
 <div class="container fill vert-offset-top-2">
   <div class="jumbotron fill" style="background-color: floralwhite">
+    <div id="document-title"><%if @document %>@document.name<% end %></div>
     <div class="row height-60 col-md-10 col-md-offset-1">
       <textarea id="code-editor"></textarea>
     </div>
@@ -111,4 +116,10 @@
       </label>
     </div>
   </div>
+</div>
+
+<div class="col-md-4 col-md-offset-4" id="save-document-popup">
+  <label>What would you like to name your script?</label>
+  <input type="text" placeholder="ex: myScript.dg" id="file-name"/><br>
+  <button type="button" class="btn btn-success" id="save-script-button">Save</button>
 </div>

@@ -8,10 +8,14 @@
 </head>
 <body class="fill">
 
-<% flash.each do |name, msg| %>
+<% if flash.any? %>
     <div id='notification'>
-      <%= msg %>
+        <% flash.each do |name, msg| %>
+          <%= msg %>
+        <% end %>
     </div>
+<% else %>
+    <div id='notification' style="display: none"></div>
 <% end %>
 
 <%= yield %>

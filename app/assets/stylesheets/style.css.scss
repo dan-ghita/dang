@@ -23,6 +23,7 @@ body {
 }
 
 .drawer {
+  padding: 5px;
   position: absolute;
   display: block;
   z-index: 5;
@@ -42,7 +43,7 @@ body {
 }
 
 .drawer-button {
-  position: absolute;
+  position: fixed;
   margin-top: 10px;
   font-size: 3.5em;
   border-radius: 100px;
@@ -68,6 +69,7 @@ body {
 
 .file-drawer-content {
   margin-top: 3em;
+  margin: 0px;
   text-align: center;
 }
 
@@ -111,6 +113,40 @@ body {
   margin-top: 10px;
 }
 
+#document-title {
+  font-size: 2em;
+  margin: 0 auto;
+  text-align: center;
+  padding-bottom: 50px;
+}
 
+#save-document-popup {
+  display: none;
+  position: fixed;
+  top: 25%;
+  height: 20%;
+  border: 2px dashed red;
+  z-index: 10;
+  text-align: center;
+  background-color: #374c5d;
+}
 
+#save-document-popup > label {
+  margin-top: 5%;
+  font-size: 1.5em;
+  color: #999999;
+}
 
+#save-document-popup > input {
+  margin-top: 5%;
+}
+
+#save-document-popup > button {
+  margin-top: 5%;
+}
+
+.file {
+  border: 1px solid darkorange;
+  padding: 0;
+  margin: 0;
+}
