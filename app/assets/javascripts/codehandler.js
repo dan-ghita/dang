@@ -1,6 +1,7 @@
 $(document).ready(function () {
     $("[name='switch']").bootstrapSwitch();
 
+    var documentId = 0;
     var myTextarea = document.getElementById("code-editor");
     var editor = CodeMirror.fromTextArea(myTextarea, {
         lineNumbers: true,
@@ -39,7 +40,18 @@ $(document).ready(function () {
 
         var output = response.responseJSON;
 
-        $('#document-title').html(output.name);
+        if( !output.success)
+            return;
+
+        var document = output.document
+        $('#document-title').html(document.name);
+        var div = $("<div>");
+        div.addClass('col-md-12');
+        div.addClass('file');
+        div.attr('id', document.id);
+        div.html(document.name + '<br>' + document.created_at );
+
+        $('.file-drawer-content').append(div);
 
         notify(output.message);
     }
@@ -65,13 +77,12 @@ $(document).ready(function () {
     }
 
     function saveDocument( name ) {
-        //$.ajax({
-        //    url: "http://localhost:3000/documents/edit",
-        //    type: "PUT",
-        //    data: {code: editor.getValue()},
-        //    dataType: "json",
-        //    complete: codeEvalResultHandler
-        //});
+        $.ajax({
+            url: "http://localhost:3000/documents/update",
+            type: "PUT",
+            data: { id: documentId, code: editor.getValue() },
+            dataType: "json"
+        });
     }
 
     function handleSaveEvent() {
@@ -80,6 +91,19 @@ $(document).ready(function () {
             $('#save-document-popup').css('display', 'block');
         } else {
             saveDocument( name );
+        }
+    }
+
+    function loadFileHandler( response ) {
+        console.warn(response);
+
+        var output = response.responseJSON;
+
+        if( !output.success )
+            notify( output.error );
+        else {
+            editor.setValue( output.code );
+            $('#document-title').html( output.name );
         }
     }
 
@@ -132,5 +156,25 @@ $(document).ready(function () {
 
     $("#run-code").click(function () {
         runCode();
+    });
+
+    $(".file").hover(function(){
+        $(this).addClass('file-highlight');
+    });
+
+    $(".file").mouseleave(function(){
+        $(this).removeClass('file-highlight');
+    });
+
+    $(".file").click(function(){
+        documentId = this.id;
+
+        $.ajax({
+            url: "http://localhost:3000/documents/show",
+            type: "GET",
+            data: { id: this.id},
+            dataType: "json",
+            complete: loadFileHandler
+        });
     });
 });

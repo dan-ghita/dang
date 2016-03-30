@@ -42,7 +42,7 @@
     <hr>
     <% if current_user %>
         <% @files.each do |file| %>
-            <div class="col-md-12 file">
+            <div class="col-md-12 file" id="<%= file.id %>">
               <%= file.name %><br>
               <%= file.updated_at %>
             </div>
@@ -119,7 +119,7 @@
 </div>
 
 <div class="col-md-4 col-md-offset-4" id="save-document-popup">
-  <label>What would you like to name your script?</label>
-  <input type="text" placeholder="ex: myScript.dg" id="file-name"/><br>
+  <label>What would you like to name your script?</label><br>
+  <input type="text" placeholder="eg. myScript.dg" id="file-name"/><br>
   <button type="button" class="btn btn-success" id="save-script-button">Save</button>
 </div>
