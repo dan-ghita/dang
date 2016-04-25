@@ -15,8 +15,12 @@ grammar Types
         '[' whitespace*  array_content? whitespace* ']' <Array> / range
     end
 
+    rule array_accessor
+        identifier '[' whitespace* int whitespace* ']' <ArrayAccessor>
+    end
+
     rule range
-        identifier_or_int whitespace+ 'to' whitespace+ identifier_or_int <Range>
+        identifier_or_int_or_accessor whitespace+ 'to' whitespace+ identifier_or_int_or_accessor <Range>
     end
 
     rule array_content
@@ -64,7 +68,7 @@ grammar Types
         'to' / 'none' / 'define' / 'as' / 'and' / 'return' / 'end' / 'if' / 'else' / 'for'
     end
 
-    rule identifier_or_int
-        int / identifier
+    rule identifier_or_int_or_accessor
+        array_accessor / int / identifier
     end
 end

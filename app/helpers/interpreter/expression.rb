@@ -56,6 +56,28 @@ module Expression
     end
   end
 
+  class ArrayAssignment < Treetop::Runtime::SyntaxNode
+    def evaluate( context, result )
+      value = elements[2].is_a?(Treetop::Runtime::SyntaxNode) ? elements[2].evaluate( context, result ) : elements[2]
+      array_name = elements[0].elements[0].text_value
+      index = elements[0].elements[2].evaluate( context, result )
+
+      if context.has_key? array_name
+        raise "[x] identifier #{array_name} is not of type array but of type #{context[array_name][1]}" unless context[array_name][1] == 'Array'
+        array = context[array_name][0]
+      else
+        raise "[x] identifier #{array_name} is not defined in the current context"
+      end
+
+      if index < 0 or index >= array.length
+        raise "[x] index #{index} is out of bounds for array #{array_name}"
+      end
+
+      array[index] = value
+      context[array_name][0] = array
+    end
+  end
+
   class Declaration < Treetop::Runtime::SyntaxNode
     def evaluate( context, result )
       value = elements[3].is_a?(Treetop::Runtime::SyntaxNode) ? elements[3].evaluate( context, result ) : elements[3]

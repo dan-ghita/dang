@@ -58,10 +58,15 @@ module Expression
   class FunctionCall < Treetop::Runtime::SyntaxNode
     def try_system_functions( context, result, function_name, parameters )
       if function_name == 'print'
+        output_string = ''
         parameters.each { |parameter|
           output = parameter.is_a?(Treetop::Runtime::SyntaxNode) ? parameter.evaluate( context, result ) : parameter
-          result.push(output.to_s)
+          if output_string != ''
+            output_string += ' '
+          end
+          output_string += output.to_s
         }
+        result.push output_string
         return true
       end
       false

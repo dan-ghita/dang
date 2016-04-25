@@ -12,11 +12,15 @@ grammar Expression
 
     rule factor
         '(' whitespace* expression whitespace* ')' <Factor> /
-        identifier_or_int
+        identifier_or_int_or_accessor
     end
 
     rule assignment
         identifier whitespace* '=' whitespace* block_element <Assignment>
+    end
+
+    rule array_assignment
+        array_accessor whitespace* '=' whitespace* block_element <ArrayAssignment>
     end
 
     rule boolean_expression
