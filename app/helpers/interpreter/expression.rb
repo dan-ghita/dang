@@ -134,4 +134,9 @@ module Expression
       end
     end
   end
+
+  class Return < Treetop::Runtime::SyntaxNode
+    def evaluate
+    end
+  end
 end

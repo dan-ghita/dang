@@ -20,7 +20,7 @@ grammar Types
     end
 
     rule range
-        identifier_or_int_or_accessor whitespace+ 'to' whitespace+ identifier_or_int_or_accessor <Range>
+        expression_operand whitespace+ 'to' whitespace+ expression_operand <Range>
     end
 
     rule array_content
@@ -68,7 +68,7 @@ grammar Types
         'to' / 'none' / 'define' / 'as' / 'and' / 'return' / 'end' / 'if' / 'else' / 'for'
     end
 
-    rule identifier_or_int_or_accessor
-        array_accessor / int / identifier
+    rule expression_operand
+        array_accessor / function_call / int / identifier
     end
 end

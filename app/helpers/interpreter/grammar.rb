@@ -43,14 +43,37 @@ module Expression
       function_parameters.zip(call_parameters).each { |pair| context[pair[0]] = [pair[1], pair[1].class.to_s] }
     end
 
+    def is_return_statement(element)
+      element.class.to_s == 'Expression::Return'
+    end
+
     def evaluate( context, result, call_parameters, function_parameters )
       current_context = context.clone
 
       match_parameters( current_context, call_parameters, function_parameters)
 
-      elements[0].evaluate( current_context, result )
+      if is_return_statement elements[0]
+        if elements[0].elements.size == 1
+          return
+        else
+          return elements[0].elements[1].elements[0].evaluate(current_context, result)
+        end
+      else
+        elements[0].evaluate( current_context, result )
+      end
+
       unless elements[1].nil?
-        elements[1].elements.each { |node| node.elements[0].evaluate( current_context, result ) }
+        elements[1].elements.each { |node|
+          if is_return_statement node.elements[0]
+            if node.elements[0].elements.size == 1
+              return
+            else
+              return node.elements[0].elements[1].elements[0].evaluate(current_context, result)
+            end
+          else
+            node.elements[0].evaluate( current_context, result )
+          end
+        }
       end
     end
   end

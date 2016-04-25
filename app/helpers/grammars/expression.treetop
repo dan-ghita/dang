@@ -12,7 +12,7 @@ grammar Expression
 
     rule factor
         '(' whitespace* expression whitespace* ')' <Factor> /
-        identifier_or_int_or_accessor
+        expression_operand
     end
 
     rule assignment
@@ -36,7 +36,7 @@ grammar Expression
     end
 
     rule return
-        'return' (whitespace+ block_element)?
+        'return' (whitespace+ block_element)? <Return>
     end
 
     rule if_statement
