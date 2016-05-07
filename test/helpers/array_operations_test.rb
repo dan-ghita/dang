@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class InterpreterTest < ActiveSupport::TestCase
+class ArrayOperationsTest < ActiveSupport::TestCase
   test 'Array accessor returns correct value' do
     code = 'a = [1, 2, 3]
             b = a[0]
