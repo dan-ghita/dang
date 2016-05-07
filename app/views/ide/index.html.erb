@@ -101,17 +101,15 @@
 <div class="container fill vert-offset-top-2">
   <div class="jumbotron fill" style="background-color: floralwhite">
     <div id="document-title"><%if @document %>@document.name<% end %></div>
-    <div class="row height-60 col-md-10 col-md-offset-1">
+    <div class="row height-50 col-md-10 col-md-offset-1">
       <textarea id="code-editor"></textarea>
     </div>
-    <div class="row mt-10">
-      <div class="col-md-2 col-md-offset-10">
+    <div class="row mt-10 col-md-2 col-md-offset-10">
         <button type="button" class="btn btn-success fill" id="run-code">
           <span class="glyphicon glyphicon-play"></span> Run
         </button>
-      </div>
     </div>
-    <div class="row height-60">
+    <div class="row">
       <label class="col-md-10 col-md-offset-1" id="code-result">
       </label>
     </div>
@@ -122,4 +120,5 @@
   <label>What would you like to name your script?</label><br>
   <input type="text" placeholder="eg. myScript.dg" id="file-name"/><br>
   <button type="button" class="btn btn-success" id="save-script-button">Save</button>
+  <button type="button" class="btn btn-danger" id="cancel-save-script-button">Cancel</button>
 </div>

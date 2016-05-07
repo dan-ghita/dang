@@ -7,6 +7,10 @@
   height: 60%;
 }
 
+.height-50 {
+  height: 50%;
+}
+
 .mt-10 {
   margin-top: 10px;
 }
@@ -29,6 +33,7 @@ body {
   z-index: 5;
   transition: transform .3s;
   background-color: #374c5d;
+  overflow: auto;
 }
 
 #settings-drawer {
@@ -119,14 +124,25 @@ body {
   margin: 0 auto;
   text-align: center;
   padding-bottom: 50px;
+  min-height: 100px;
+}
+
+#popup-shadow {
+  z-index: 9;
+  opacity: 0.4;
+  background-color: #000000;
+  position: fixed;
+  min-height: 100%;
+  min-width: 100%;
+  display: none;
 }
 
 #save-document-popup {
   display: none;
+  border-radius: 8px;
   position: fixed;
-  top: 25%;
-  height: 20%;
-  border: 2px dashed red;
+  top: 30%;
+  height: 22%;
   z-index: 10;
   text-align: center;
   background-color: #374c5d;

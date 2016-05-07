@@ -9,10 +9,9 @@ $(document).ready(function () {
         theme: "icecoder"
     });
 
-    function notify( message ) {
-        $('#notification').html( message );
-        $('#notification').fadeIn('fast');
-        setTimeout(function() {
+    function notify(message) {
+        $('#notification').html(message).fadeIn('fast');
+        setTimeout(function () {
             $('#notification').fadeOut('fast');
         }, 2000);
     }
@@ -40,7 +39,7 @@ $(document).ready(function () {
 
         var output = response.responseJSON;
 
-        if( !output.success)
+        if (!output.success)
             return;
 
         var document = output.document
@@ -49,7 +48,7 @@ $(document).ready(function () {
         div.addClass('col-md-12');
         div.addClass('file');
         div.attr('id', document.id);
-        div.html(document.name + '<br>' + document.created_at );
+        div.html(document.name + '<br>' + document.created_at);
 
         $('.file-drawer-content').append(div);
 
@@ -66,7 +65,7 @@ $(document).ready(function () {
         });
     }
 
-    function saveNewDocument( name ) {
+    function saveNewDocument(name) {
         $.ajax({
             url: "http://localhost:3000/documents/create",
             type: "POST",
@@ -76,34 +75,35 @@ $(document).ready(function () {
         });
     }
 
-    function saveDocument( name ) {
+    function saveDocument(name) {
         $.ajax({
             url: "http://localhost:3000/documents/update",
             type: "PUT",
-            data: { id: documentId, code: editor.getValue() },
+            data: {id: documentId, code: editor.getValue()},
             dataType: "json"
         });
     }
 
     function handleSaveEvent() {
         var name = $('#document-title').text();
-        if( name == '' || name.length == 0) {
+        if (name == '' || name.length == 0) {
             $('#save-document-popup').css('display', 'block');
+            $('#popup-shadow').css('display', 'block');
         } else {
-            saveDocument( name );
+            saveDocument(name);
         }
     }
 
-    function loadFileHandler( response ) {
+    function loadFileHandler(response) {
         console.warn(response);
 
         var output = response.responseJSON;
 
-        if( !output.success )
-            notify( output.error );
+        if (!output.success)
+            notify(output.error);
         else {
-            editor.setValue( output.code );
-            $('#document-title').html( output.name );
+            editor.setValue(output.code);
+            $('#document-title').html(output.name);
         }
     }
 
@@ -118,9 +118,17 @@ $(document).ready(function () {
         }
     }
 
+    function handleOtherKeyEvents(e) {
+        if (e.which == 27) // esc
+            if ($('#save-document-popup').css('display') != 'none')
+                $('#cancel-save-script-button').click();
+    }
+
     $(document).keydown(function (e) {
         if (e.ctrlKey)
             handleCtrlKeyEvents(e);
+        else
+            handleOtherKeyEvents(e)
     });
 
     $("#settings-drawer-button").hover(function () {
@@ -133,48 +141,56 @@ $(document).ready(function () {
 
     $("#file-drawer-button").hover(function () {
         $("#file-drawer").css("transform", "translate(0)");
-        $("#file-drawer-button").find("span").removeClass("fa-folder");
-        $("#file-drawer-button").find("span").addClass("fa-folder-open");
+        $("#file-drawer-button")
+            .find("span")
+            .removeClass("fa-folder")
+            .addClass("fa-folder-open");
     });
 
     $("#file-drawer").mouseleave(function () {
         $("#file-drawer").css("transform", "translate(100%)");
-        $("#file-drawer-button").find("span").removeClass("fa-folder-open");
-        $("#file-drawer-button").find("span").addClass("fa-folder");
+        $("#file-drawer-button")
+            .find("span")
+            .removeClass("fa-folder-open")
+            .addClass("fa-folder");
     });
 
-    $('#save-script-button').click(function(){
+    $('#save-script-button').click(function () {
         var name = $('#file-name').val();
         console.error(name);
-        if( name == '' || name.length == 0)
+        if (name == '' || name.length == 0)
             alert("File name can't be empty");
         else {
-            saveNewDocument( name );
+            saveNewDocument(name);
             $('#save-document-popup').css('display', 'none');
         }
+    });
+
+    $('#cancel-save-script-button').click(function () {
+        $('#save-document-popup').css('display', 'none');
+        $('#popup-shadow').css('display', 'none');
     });
 
     $("#run-code").click(function () {
         runCode();
     });
 
-    $(".file").hover(function(){
-        $(this).addClass('file-highlight');
-    });
+    $(".file")
+        .hover(function () {
+            $(this).addClass('file-highlight');
+        })
+        .mouseleave(function () {
+            $(this).removeClass('file-highlight');
+        })
+        .click(function () {
+            documentId = this.id;
 
-    $(".file").mouseleave(function(){
-        $(this).removeClass('file-highlight');
-    });
-
-    $(".file").click(function(){
-        documentId = this.id;
-
-        $.ajax({
-            url: "http://localhost:3000/documents/show",
-            type: "GET",
-            data: { id: this.id},
-            dataType: "json",
-            complete: loadFileHandler
+            $.ajax({
+                url: "http://localhost:3000/documents/show",
+                type: "GET",
+                data: {id: this.id},
+                dataType: "json",
+                complete: loadFileHandler
+            });
         });
-    });
 });
