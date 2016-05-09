@@ -139,8 +139,8 @@ module Expression
       identifier = elements[1].text_value
       if context.has_key? identifier
         raise "[x] Key #{identifier} is already defined"
-        return
       end
+
       # from
       array = elements[3].evaluate(context, result)
 
@@ -159,7 +159,10 @@ module Expression
       array.each { |element|
         context[identifier] = [element, element.class.to_s]
         unless has_filter and !condition.evaluate(context, result)
-          body.evaluate(context, result)
+          should_return, return_value = body.evaluate(context, result)
+          if should_return == true
+            return should_return, return_value
+          end
         end
       }
       context.delete(identifier)

@@ -33,6 +33,10 @@ module Expression
   end
 
   class FunctionBody < Treetop::Runtime::SyntaxNode
+    def self.is_return_statement(element)
+      element.class.to_s == 'Expression::Return'
+    end
+
     def match_parameters(context, call_parameters, function_parameters)
       raise "Expected #{function_parameters.length} parameters but found #{call_parameters.length}" \
       unless function_parameters.length == call_parameters.length
@@ -40,35 +44,45 @@ module Expression
       function_parameters.zip(call_parameters).each { |pair| context[pair[0]] = [pair[1], pair[1].class.to_s] }
     end
 
-    def is_return_statement(element)
-      element.class.to_s == 'Expression::Return'
-    end
-
     def evaluate(context, result, call_parameters, function_parameters)
       current_context = context.clone
 
       match_parameters(current_context, call_parameters, function_parameters)
 
-      if is_return_statement elements[0]
+      if FunctionBody.is_return_statement elements[0]
         if elements[0].elements.size == 1
           return
         else
           return elements[0].elements[1].elements[0].evaluate(current_context, result)
         end
       else
-        elements[0].evaluate(current_context, result)
+        should_return, return_value = elements[0].evaluate(current_context, result)
+        if should_return == true
+          if return_value
+            return return_value
+          else
+            return
+          end
+        end
       end
 
       unless elements[1].nil?
         elements[1].elements.each { |node|
-          if is_return_statement node.elements[0]
+          if FunctionBody.is_return_statement node.elements[0]
             if node.elements[0].elements.size == 1
               return
             else
               return node.elements[0].elements[1].elements[0].evaluate(current_context, result)
             end
           else
-            node.elements[0].evaluate(current_context, result)
+            should_return, return_value = node.elements[0].evaluate(current_context, result)
+            if should_return == true
+              if return_value
+                return return_value
+              else
+                return
+              end
+            end
           end
         }
       end
@@ -115,10 +129,36 @@ module Expression
 
   class ChainedElement < Treetop::Runtime::SyntaxNode
     def evaluate(context, result)
-      elements[0].evaluate(context, result)
-      unless elements[1].nil?
-        elements[1].elements[0].elements.each { |node| node.evaluate(context, result) }
+      if FunctionBody.is_return_statement elements[0]
+        if elements[0].elements.size == 1
+          return true, nil
+        else
+          return true, elements[0].elements[1].elements[0].evaluate(context, result)
+        end
+      else
+        should_return, return_value = elements[0].evaluate(context, result)
+        if should_return
+          return should_return, return_value
+        end
       end
+
+      unless elements[1].nil?
+        elements[1].elements[0].elements.each { |node|
+          if FunctionBody.is_return_statement node
+            if node.elements.size == 1
+              return true, nil
+            else
+              return true, node.elements[1].elements[0].evaluate(context, result)
+            end
+          else
+            should_return, return_value = node.evaluate(context, result)
+            if should_return
+              return should_return, return_value
+            end
+          end
+        }
+      end
+      return false, nil
     end
   end
 
