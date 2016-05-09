@@ -1,12 +1,12 @@
 module Expression
   class Main < Treetop::Runtime::SyntaxNode
-    def evaluate( context, result )
-      elements.each { |node| node.elements[0].evaluate( context, result ).to_s }
+    def evaluate(context, result)
+      elements.each { |node| node.elements[0].evaluate(context, result).to_s }
     end
   end
 
   class LineComment < Treetop::Runtime::SyntaxNode
-    def evaluate( context, result )
+    def evaluate(context, result)
       ''
     end
   end
@@ -14,11 +14,8 @@ module Expression
   class FunctionBodyElement < Treetop::Runtime::SyntaxNode
   end
 
-  class ForLoop < Treetop::Runtime::SyntaxNode
-  end
-
   class FunctionDeclaration < Treetop::Runtime::SyntaxNode
-    def evaluate( context, result )
+    def evaluate(context, result)
       # fun
       function_name = elements[1].text_value
 
@@ -28,7 +25,7 @@ module Expression
       # with
       parameters = []
       unless elements[5].text_value == 'none'
-        parameters = elements[5].evaluate( context, result )
+        parameters = elements[5].evaluate(context, result)
       end
 
       context[function_name] = [function_body, function_body.class.to_s, parameters]
@@ -36,7 +33,7 @@ module Expression
   end
 
   class FunctionBody < Treetop::Runtime::SyntaxNode
-    def match_parameters( context, call_parameters, function_parameters )
+    def match_parameters(context, call_parameters, function_parameters)
       raise "Expected #{function_parameters.length} parameters but found #{call_parameters.length}" \
       unless function_parameters.length == call_parameters.length
 
@@ -47,10 +44,10 @@ module Expression
       element.class.to_s == 'Expression::Return'
     end
 
-    def evaluate( context, result, call_parameters, function_parameters )
+    def evaluate(context, result, call_parameters, function_parameters)
       current_context = context.clone
 
-      match_parameters( current_context, call_parameters, function_parameters)
+      match_parameters(current_context, call_parameters, function_parameters)
 
       if is_return_statement elements[0]
         if elements[0].elements.size == 1
@@ -59,7 +56,7 @@ module Expression
           return elements[0].elements[1].elements[0].evaluate(current_context, result)
         end
       else
-        elements[0].evaluate( current_context, result )
+        elements[0].evaluate(current_context, result)
       end
 
       unless elements[1].nil?
@@ -71,7 +68,7 @@ module Expression
               return node.elements[0].elements[1].elements[0].evaluate(current_context, result)
             end
           else
-            node.elements[0].evaluate( current_context, result )
+            node.elements[0].evaluate(current_context, result)
           end
         }
       end
@@ -79,11 +76,11 @@ module Expression
   end
 
   class FunctionCall < Treetop::Runtime::SyntaxNode
-    def try_system_functions( context, result, function_name, parameters )
+    def try_system_functions(context, result, function_name, parameters)
       if function_name == 'print'
         output_string = ''
         parameters.each { |parameter|
-          output = parameter.is_a?(Treetop::Runtime::SyntaxNode) ? parameter.evaluate( context, result ) : parameter
+          output = parameter.is_a?(Treetop::Runtime::SyntaxNode) ? parameter.evaluate(context, result) : parameter
           if output_string != ''
             output_string += ' '
           end
@@ -95,21 +92,21 @@ module Expression
       false
     end
 
-    def evaluate( context, result )
+    def evaluate(context, result)
       function_name = elements[0].text_value
 
       parameters = []
       unless elements[1].nil?
-        parameters = elements[1].evaluate( context, result )
+        parameters = elements[1].evaluate(context, result)
       end
 
-      if try_system_functions( context, result, function_name, parameters )
+      if try_system_functions(context, result, function_name, parameters)
         return
       end
 
       if context.has_key? function_name
         raise "[x] identifier #{function_name} is not defined as a function" unless context[function_name][1] == 'Expression::FunctionBody'
-        context[function_name][0].evaluate( context, result, parameters, context[function_name][2] )
+        context[function_name][0].evaluate(context, result, parameters, context[function_name][2])
       else
         raise "[x] identifier #{function_name} is not defined in the current context"
       end
@@ -117,10 +114,51 @@ module Expression
   end
 
   class ChainedElement < Treetop::Runtime::SyntaxNode
-    def evaluate( context, result )
-      elements[0].evaluate( context, result)
+    def evaluate(context, result)
+      elements[0].evaluate(context, result)
       unless elements[1].nil?
-        elements[1].elements[0].elements.each { |node| node.evaluate( context, result ) }
+        elements[1].elements[0].elements.each { |node| node.evaluate(context, result) }
+      end
+    end
+  end
+
+  class MethodCall < Treetop::Runtime::SyntaxNode
+    def try_call_method(context, object_name, object, method_name, parameters)
+      if object[1] == 'Array'
+        if method_name == 'append'
+          parameters.each { |parameter| object[0].push parameter }
+        elsif method_name == 'delete'
+          parameters.each { |parameter| object[0].delete parameter }
+        else
+          return false
+        end
+      else
+        return false
+      end
+
+      context[object_name] = object
+      true
+    end
+
+    def evaluate(context, result)
+      object_name = elements[0].text_value
+      if context.has_key? object_name
+        object = context[object_name]
+        method = elements[2]
+        method_name = method.elements[0].text_value
+
+        parameters = []
+        unless elements[1].nil?
+          parameters = method.elements[1].evaluate(context, result)
+        end
+
+        if try_call_method(context, object_name, object, method_name, parameters)
+          return
+        else
+          raise "[x] Method #{method_name} can't be called for object #{object_name}(#{object[1]})"
+        end
+      else
+        raise "[x] identifier #{object_name} is not defined in the current context"
       end
     end
   end

@@ -7,7 +7,8 @@ module Types
 
   class String < Treetop::Runtime::SyntaxNode
     def evaluate( context, result )
-      text_value.gsub('"', '')
+      # text_value.gsub('"', '')
+      text_value
     end
   end
 
@@ -29,7 +30,9 @@ module Types
       index = elements[2].evaluate( context, result )
 
       if context.has_key? array_name
-        raise "[x] identifier #{array_name} is not of type array but of type #{context[array_name][1]}" unless context[array_name][1] == 'Array'
+        raise "[x] identifier #{array_name} is not of type Array/String but of type #{context[array_name][1]}" \
+        unless %w(Array String).include? context[array_name][1]
+
         array = context[array_name][0]
       else
         raise "[x] identifier #{array_name} is not defined in the current context"
@@ -39,7 +42,8 @@ module Types
         raise "[x] index #{index} is out of bounds for array #{array_name}"
       end
 
-      array[index]
+      # string contains leading "
+      context[array_name][1] == 'String' ? array[index + 1] : array[index]
     end
   end
 

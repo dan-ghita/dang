@@ -48,7 +48,70 @@ class ArrayOperationsTest < ActiveSupport::TestCase
     assert_equal(['2', '[2, 2, 3]'], result)
   end
 
-  test 'Print function prints all parameters un the same line' do
+  test 'Appending to array modifies content' do
+    code= 'a = [1, 2, 3]
+           a.append(4)
+           print(a)'
+
+    result = Interpreter.interpret(code)
+    assert_equal(['[1, 2, 3, 4]'], result)
+  end
+
+  test 'Appending multiple elements to array modifies content' do
+    code= 'a = [1, 2, 3]
+           a.append(4, 5, 6)
+           print(a)'
+
+    result = Interpreter.interpret(code)
+    assert_equal(['[1, 2, 3, 4, 5, 6]'], result)
+  end
+
+  test 'Appending to number throws error' do
+    code= 'a = 1
+           a.append(2)
+           print(a)'
+
+    result = Interpreter.interpret(code)
+    assert_equal(["[x] Method append can't be called for object a(Fixnum)"], result)
+  end
+
+  test 'Deleting multiple elements from array modifies content' do
+    code= 'a = [1, 2, 3, 4, 4]
+           a.delete(3, 4)
+           print(a)'
+
+    result = Interpreter.interpret(code)
+    assert_equal(['[1, 2]'], result)
+  end
+
+  test 'Deleting from number throws error' do
+    code= 'a = 1
+           a.delete(2)
+           print(a)'
+
+    result = Interpreter.interpret(code)
+    assert_equal(["[x] Method delete can't be called for object a(Fixnum)"], result)
+  end
+
+  test 'Array identifier concatenation produces expected result' do
+    code= 'a = [1]
+           b = [2]
+           c = a + b
+           print(c)'
+
+    result = Interpreter.interpret(code)
+    assert_equal(['[1, 2]'], result)
+  end
+
+  test 'Array concatenation produces expected result' do
+    code= 'a = [1] + [2]
+           print(a)'
+
+    result = Interpreter.interpret(code)
+    assert_equal(['[1, 2]'], result)
+  end
+
+  test 'Print function prints all parameters on the same line' do
     code = 'print(1, 2, 3)'
 
     result = Interpreter.interpret(code)

@@ -20,7 +20,7 @@ grammar Types
     end
 
     rule range
-        expression_operand whitespace+ 'to' whitespace+ expression_operand <Range>
+        range_operand whitespace+ 'to' whitespace+ range_operand <Range>
     end
 
     rule array_content
@@ -68,7 +68,11 @@ grammar Types
         'to' / 'none' / 'define' / 'as' / 'and' / 'return' / 'end' / 'if' / 'else' / 'for'
     end
 
-    rule expression_operand
+    rule range_operand
         array_accessor / function_call / int / identifier
+    end
+
+    rule expression_operand
+        string / array_accessor / array / function_call / int / identifier
     end
 end

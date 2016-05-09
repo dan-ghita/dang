@@ -63,7 +63,9 @@ module Expression
       index = elements[0].elements[2].evaluate( context, result )
 
       if context.has_key? array_name
-        raise "[x] identifier #{array_name} is not of type array but of type #{context[array_name][1]}" unless context[array_name][1] == 'Array'
+        raise "[x] identifier #{array_name} is not of type Array/String but of type #{context[array_name][1]}" \
+        unless %w(Array String).include? context[array_name][1]
+
         array = context[array_name][0]
       else
         raise "[x] identifier #{array_name} is not defined in the current context"
@@ -73,7 +75,8 @@ module Expression
         raise "[x] index #{index} is out of bounds for array #{array_name}"
       end
 
-      array[index] = value
+      # string contains leading "
+      context[array_name][1] == 'String' ? array[index + 1] = value : array[index] = value
       context[array_name][0] = array
     end
   end
