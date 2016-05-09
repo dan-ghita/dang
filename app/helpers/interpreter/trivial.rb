@@ -5,6 +5,12 @@ module Types
     end
   end
 
+  class Float < Treetop::Runtime::SyntaxNode
+    def evaluate( context, result )
+      text_value.to_f
+    end
+  end
+
   class String < Treetop::Runtime::SyntaxNode
     def evaluate( context, result )
       # text_value.gsub('"', '')
@@ -43,7 +49,7 @@ module Types
       end
 
       # string contains leading "
-      context[array_name][1] == 'String' ? array[index + 1] : array[index]
+      context[array_name][1] == 'String' ? '"' + array[index + 1] + '"' : array[index]
     end
   end
 

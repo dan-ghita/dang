@@ -3,6 +3,10 @@ grammar Types
          '0' <Integer> / '-'? digit+ <Integer>
     end
 
+    rule float
+         int '.' int <Float>
+    end
+
     rule string
         '"' ([^"\\] / "\\" . )* '"' <String>
     end
@@ -24,6 +28,7 @@ grammar Types
     end
 
     rule array_content
+        (float whitespace* ',' whitespace*)* float /
         (int whitespace* ',' whitespace*)* int /
         (string whitespace* ',' whitespace*)* string /
         (bool whitespace* ',' whitespace*)* bool /
@@ -69,10 +74,10 @@ grammar Types
     end
 
     rule range_operand
-        array_accessor / function_call / int / identifier
+        array_accessor / function_call / float / int / identifier
     end
 
     rule expression_operand
-        string / array_accessor / array / function_call / int / identifier
+        string / array_accessor / array / function_call / float / int / identifier
     end
 end

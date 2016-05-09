@@ -1,13 +1,13 @@
 require 'test_helper'
 
-class ArrayOperationsTest < ActiveSupport::TestCase
+class StringOperationsTest < ActiveSupport::TestCase
   test 'String accessor returns correct value' do
     code = 'a = "abc"
             b = a[0]
             print(b)'
 
     result = Interpreter.interpret(code)
-    assert_equal(['a'], result)
+    assert_equal(['"a"'], result)
   end
 
   test 'String assignment modifies string' do
@@ -16,7 +16,7 @@ class ArrayOperationsTest < ActiveSupport::TestCase
             print(a)'
 
     result = Interpreter.interpret(code)
-    assert_equal(['bbc'], result)
+    assert_equal(['"bbc"'], result)
   end
 
   test 'Using [] operator on int throws error' do
