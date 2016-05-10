@@ -3,10 +3,40 @@ $(document).ready(function () {
 
     var documentId = 0;
     var myTextarea = document.getElementById("code-editor");
+
+
+    CodeMirror.commands.autocomplete = function (cm) {
+        CodeMirror.showHint(cm, CodeMirror.hint.dang, {completeSingle: false});
+    };
+
     var editor = CodeMirror.fromTextArea(myTextarea, {
         lineNumbers: true,
         mode: "dang",
-        theme: "icecoder"
+        theme: "icecoder",
+        extraKeys: {
+            "Ctrl-Space": "autocomplete"
+        }
+    });
+
+    function isNumber(keyCode) {
+        return keyCode >= 48 && keyCode <= 57;
+    }
+
+    function isAlpha(keyCode) {
+        return keyCode >= 65 && keyCode <= 90;
+    }
+
+    function isDash(keyCode) {
+        return keyCode == 189;
+    }
+
+    editor.on("keyup", function (cm, event) {
+        if (!cm.state.completionActive &&
+            !event.ctrlKey &&
+            (isNumber(event.keyCode) || isAlpha(event.keyCode) || isDash(event.keyCode))
+        ) {
+            CodeMirror.commands.autocomplete(cm, null, {completeSingle: false});
+        }
     });
 
     function notify(message) {
