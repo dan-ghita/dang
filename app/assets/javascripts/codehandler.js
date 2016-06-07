@@ -193,6 +193,7 @@ $(document).ready(function () {
         else {
             saveNewDocument(name);
             $('#save-document-popup').css('display', 'none');
+            $('#popup-shadow').css('display', 'none');
         }
     });
 

@@ -30,6 +30,12 @@ class Interpreter
       return
     end
 
+    # string value will be interpreted in 'Types::String' so child nodes are redundant
+    if ast.class.to_s == 'Types::String'
+      ast.elements.clear
+      return
+    end
+
     to_delete = []
 
     rex = /[\s\n\t]+/
@@ -51,6 +57,8 @@ class Interpreter
       result.push(parser.failure_reason)
     else
       begin
+        pp ast
+        print "cleanup--------------------------------"
         tree_cleanup(ast)
         pp ast
 

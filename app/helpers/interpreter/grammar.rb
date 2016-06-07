@@ -143,7 +143,8 @@ module Expression
       end
 
       unless elements[1].nil?
-        elements[1].elements[0].elements.each { |node|
+        elements[1].elements.each { |node|
+          node = node.elements[0]
           if FunctionBody.is_return_statement node
             if node.elements.size == 1
               return true, nil

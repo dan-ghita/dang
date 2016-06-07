@@ -1,6 +1,14 @@
 require 'test_helper'
 
 class StringOperationsTest < ActiveSupport::TestCase
+  test 'String is printed correctly after definition' do
+    code = 's = "a  b   c"
+                print(s)'
+
+    result = Interpreter.interpret(code)
+    assert_equal(['"a  b   c"'], result)
+  end
+
   test 'String accessor returns correct value' do
     code = 'a = "abc"
             b = a[0]
