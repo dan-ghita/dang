@@ -6,7 +6,7 @@ class StringOperationsTest < ActiveSupport::TestCase
                 print(s)'
 
     result = Interpreter.interpret(code)
-    assert_equal(['"a  b   c"'], result)
+    assert_equal(['a  b   c'], result)
   end
 
   test 'String accessor returns correct value' do
@@ -15,7 +15,7 @@ class StringOperationsTest < ActiveSupport::TestCase
             print(b)'
 
     result = Interpreter.interpret(code)
-    assert_equal(['"a"'], result)
+    assert_equal(['a'], result)
   end
 
   test 'String assignment modifies string' do
@@ -24,7 +24,7 @@ class StringOperationsTest < ActiveSupport::TestCase
             print(a)'
 
     result = Interpreter.interpret(code)
-    assert_equal(['"bbc"'], result)
+    assert_equal(['bbc'], result)
   end
 
   test 'Using [] operator on int throws error' do

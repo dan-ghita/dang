@@ -111,6 +111,14 @@ class ArrayOperationsTest < ActiveSupport::TestCase
     assert_equal(['[1, 2]'], result)
   end
 
+  test 'Array accessor works for nested arrays' do
+    code= 'a = [[1], [2]]
+           print(a[0][0])'
+
+    result = Interpreter.interpret(code)
+    assert_equal(['[0]'], result)
+  end
+
   test 'Print function prints all parameters on the same line' do
     code = 'print(1, 2, 3)'
 

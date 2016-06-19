@@ -97,7 +97,7 @@ class ReturnTest < ActiveSupport::TestCase
             print(f())'
 
     result = Interpreter.interpret(code)
-    assert_equal(['"Success!"'], result)
+    assert_equal(['Success!'], result)
   end
 
   test 'Returning inside nested select stops execution and returns value' do
@@ -131,6 +131,6 @@ class ReturnTest < ActiveSupport::TestCase
             print(f())'
 
     result = Interpreter.interpret(code)
-    assert_equal(['"Nested success!"'], result)
+    assert_equal(['Nested success!'], result)
   end
 end
