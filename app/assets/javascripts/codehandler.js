@@ -87,7 +87,7 @@ $(document).ready(function () {
 
     function runCode() {
         $.ajax({
-            url: "http://localhost:3000/ide/eval",
+            url: "/ide/eval",
             type: "POST",
             data: {code: editor.getValue()},
             dataType: "json",
@@ -97,7 +97,7 @@ $(document).ready(function () {
 
     function saveNewDocument(name) {
         $.ajax({
-            url: "http://localhost:3000/documents/create",
+            url: "/documents/create",
             type: "POST",
             data: {name: name, code: editor.getValue()},
             dataType: "json",
@@ -107,7 +107,7 @@ $(document).ready(function () {
 
     function saveDocument(name) {
         $.ajax({
-            url: "http://localhost:3000/documents/update",
+            url: "/documents/update",
             type: "PUT",
             data: {id: documentId, code: editor.getValue()},
             dataType: "json"
@@ -217,7 +217,7 @@ $(document).ready(function () {
             documentId = this.id;
 
             $.ajax({
-                url: "http://localhost:3000/documents/show",
+                url: "/documents/show",
                 type: "GET",
                 data: {id: this.id},
                 dataType: "json",

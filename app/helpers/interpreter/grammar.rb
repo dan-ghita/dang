@@ -100,6 +100,7 @@ module Expression
           end
           output_string += output.to_s
         }
+        output_string.gsub!('"', '')
         result.push output_string
         return true
       end

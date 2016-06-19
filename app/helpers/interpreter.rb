@@ -31,7 +31,7 @@ class Interpreter
     end
 
     # string value will be interpreted in 'Types::String' so child nodes are redundant
-    if ast.class.to_s == 'Types::String'
+    if ast.class.to_s.in? %w(Types::String Types::Identifier)
       ast.elements.clear
       return
     end
