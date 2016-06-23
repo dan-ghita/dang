@@ -11,12 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160328171029) do
+ActiveRecord::Schema.define(version: 20160623165848) do
 
   create_table "documents", force: :cascade do |t|
     t.string   "name",       limit: 255
     t.string   "path",       limit: 255
     t.integer  "user_id",    limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "settings", force: :cascade do |t|
+    t.boolean  "line_numbers", limit: 1
+    t.boolean  "auto_indent",  limit: 1
+    t.boolean  "auto_correct", limit: 1
+    t.integer  "user_id",      limit: 4
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end

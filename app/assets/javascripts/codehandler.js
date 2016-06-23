@@ -41,6 +41,32 @@ $(document).ready(function () {
         }
     });
 
+    function updateSettings(response) {
+        console.log(response);
+
+        var settings = response.responseJSON.settings[0];
+        editor.setOption("lineNumbers", settings.line_numbers);
+        editor.setOption("smartIndent", settings.auto_indent);
+        if(settings.auto_correct)
+            CodeMirror.commands.autocomplete = autoComplete;
+        else
+            CodeMirror.commands.autocomplete = function () {};
+        $("#line-numbers-switch").bootstrapSwitch('state', settings.line_numbers, true);
+        $("#auto-indent-switch").bootstrapSwitch('state', settings.auto_indent, true);
+        $("#auto-complete-switch").bootstrapSwitch('state', settings.auto_correct, true);
+    }
+
+    function syncSettings() {
+        $.ajax({
+            url: "/settings/show",
+            type: "GET",
+            dataType: "json",
+            complete: updateSettings
+        });
+    }
+
+    syncSettings();
+
     function notify(message) {
         $('#notification').html(message).fadeIn('fast');
         setTimeout(function () {
@@ -227,14 +253,23 @@ $(document).ready(function () {
             });
         });
 
+    function updateServerSettings(settingName, settingValue) {
+        $.ajax({
+            url: "/settings/update",
+            type: "PUT",
+            data: {settingName: settingName, settingValue: settingValue},
+            dataType: "json"
+        });
+    }
+
     $("#line-numbers-switch").on('switchChange.bootstrapSwitch', function (event, state) {
         editor.setOption("lineNumbers", state);
+        updateServerSettings("line_numbers", state);
     });
 
     $("#auto-indent-switch").on('switchChange.bootstrapSwitch', function (event, state) {
-        console.log('auto indent', state);
-        //editor.setOption("indentUnit", 0);
         editor.setOption("smartIndent", state);
+        updateServerSettings("auto_indent", state);
     });
 
     $("#auto-complete-switch").on('switchChange.bootstrapSwitch', function (event, state) {
@@ -242,5 +277,6 @@ $(document).ready(function () {
             CodeMirror.commands.autocomplete = autoComplete;
         else
             CodeMirror.commands.autocomplete = function () {};
+        updateServerSettings("auto_correct", state);
     });
 });

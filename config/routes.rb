@@ -1,4 +1,18 @@
 Rails.application.routes.draw do
+  get 'settings/new'
+
+  get 'settings/create'
+
+  get 'settings/update'
+
+  get 'settings/edit'
+
+  get 'settings/destroy'
+
+  get 'settings/index'
+
+  get 'settings/show'
+
   get 'ide/index'
 
   # The priority is based upon order of creation: first created -> highest priority.

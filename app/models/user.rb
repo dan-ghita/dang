@@ -14,4 +14,5 @@ class User < ActiveRecord::Base
             :confirmation => true
 
   has_many :documents
+  has_one :setting
 end
