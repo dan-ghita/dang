@@ -20,7 +20,8 @@ grammar Types
     end
 
     rule array_accessor
-        identifier '[' whitespace* int whitespace* ']' <ArrayAccessor>
+        identifier '[' whitespace* int whitespace* ']'
+        (whitespace* '[' whitespace* int whitespace* ']')* <ArrayAccessor>
     end
 
     rule range
@@ -68,9 +69,9 @@ grammar Types
     end
 
     rule reserved_words
-        'return' / 'fun' / 'does' / 'with' / 'int' / 'string' / 'when' / 'then' /
+        'end' / 'return' / 'fun' / 'does' / 'with' / 'int' / 'string' / 'when' / 'then' /
         'otherwise' / 'ow' / 'select' / 'from' / 'where' / 'do' / 'true' / 'false' /
-        'to' / 'none' / 'define' / 'as' / 'and' / 'return' / 'end' / 'if' / 'else' / 'for'
+        'to' / 'none' / 'define' / 'as' / 'and' / 'return' / 'if' / 'else' / 'for'
     end
 
     rule range_operand

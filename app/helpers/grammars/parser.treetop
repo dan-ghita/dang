@@ -10,7 +10,7 @@ grammar Grammar
     end
 
     rule chained_elements
-        ( line_comment / function_body_element )
+        (line_comment / function_body_element)
         (whitespace+ (function_body_element / line_comment))*
         <ChainedElement>
     end

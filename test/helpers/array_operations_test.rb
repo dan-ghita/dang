@@ -112,17 +112,42 @@ class ArrayOperationsTest < ActiveSupport::TestCase
   end
 
   test 'Array accessor works for nested arrays' do
-    code= 'a = [[1], [2]]
-           print(a[0][0])'
+    code= 'a = [[[[1], [2]]]]
+           print(a[0][0][1][0])'
 
     result = Interpreter.interpret(code)
-    assert_equal(['[0]'], result)
+    assert_equal(['2'], result)
   end
 
-  test 'Print function prints all parameters on the same line' do
-    code = 'print(1, 2, 3)'
+  test 'Array accessor on nested arrays returns arrays' do
+    code= 'a = [[[[1], [2]]]]
+           print(a[0][0] + [[3], [4]])'
 
     result = Interpreter.interpret(code)
-    assert_equal(['1 2 3'], result)
+    assert_equal(['[[1], [2], [3], [4]]'], result)
+  end
+
+  test 'Array accessor on strings in array returns string character' do
+    code= 'a = [[["abc"]]]
+           print(a[0][0][0][1])'
+
+    result = Interpreter.interpret(code)
+    assert_equal(['b'], result)
+  end
+
+  test 'Accessing integer element from nested array throws error' do
+    code= 'a = [[[1]]]
+           print(a[0][0][0][1])'
+
+    result = Interpreter.interpret(code)
+    assert_equal(["[x] element 1 is not of type Array/String but of type Fixnum"], result)
+  end
+
+  test 'Accessing nested array throws error when index out of bounds' do
+    code= 'a = [[[1]]]
+           print(a[0][0][1])'
+
+    result = Interpreter.interpret(code)
+    assert_equal(["[x] index 1 is out of bounds for array [1]"], result)
   end
 end

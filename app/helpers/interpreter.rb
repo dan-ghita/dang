@@ -49,6 +49,7 @@ class Interpreter
   end
 
   def self.interpret(code)
+    code += ' '
     parser = GrammarParser.new
     ast = parser.parse code
 
