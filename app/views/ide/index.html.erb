@@ -101,16 +101,16 @@
 <div class="container fill vert-offset-top-2">
   <div class="jumbotron fill" style="background-color: floralwhite">
     <div id="document-title"><%if @document %>@document.name<% end %></div>
-    <div class="row height-50 col-md-10 col-md-offset-1">
+    <div class="row height-40 col-md-10 col-md-offset-1">
       <textarea id="code-editor"></textarea>
     </div>
-    <div class="row mt-10 col-md-2 col-md-offset-10">
+    <div class="row col-md-2 col-md-offset-10 mt-20">
         <button type="button" class="btn btn-success fill" id="run-code">
           <span class="glyphicon glyphicon-play"></span> Run
         </button>
     </div>
-    <div class="row">
-      <label class="col-md-10 col-md-offset-1" id="code-result">
+    <div class="row height-30 col-md-10 col-md-offset-1 mt-40">
+      <label class="col-md-12" id="code-result">
       </label>
     </div>
   </div>
