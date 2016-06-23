@@ -5,9 +5,11 @@ $(document).ready(function () {
     var myTextarea = document.getElementById("code-editor");
 
 
-    CodeMirror.commands.autocomplete = function (cm) {
+    var autoComplete = function (cm) {
         CodeMirror.showHint(cm, CodeMirror.hint.dang, {completeSingle: false});
     };
+
+    CodeMirror.commands.autocomplete = autoComplete;
 
     var editor = CodeMirror.fromTextArea(myTextarea, {
         lineNumbers: true,
@@ -224,4 +226,21 @@ $(document).ready(function () {
                 complete: loadFileHandler
             });
         });
+
+    $("#line-numbers-switch").on('switchChange.bootstrapSwitch', function (event, state) {
+        editor.setOption("lineNumbers", state);
+    });
+
+    $("#auto-indent-switch").on('switchChange.bootstrapSwitch', function (event, state) {
+        console.log('auto indent', state);
+        //editor.setOption("indentUnit", 0);
+        editor.setOption("smartIndent", state);
+    });
+
+    $("#auto-complete-switch").on('switchChange.bootstrapSwitch', function (event, state) {
+        if(state)
+            CodeMirror.commands.autocomplete = autoComplete;
+        else
+            CodeMirror.commands.autocomplete = function () {};
+    });
 });
