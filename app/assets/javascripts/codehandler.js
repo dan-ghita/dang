@@ -143,6 +143,8 @@ $(document).ready(function () {
     }
 
     function handleSaveEvent() {
+        if($('#signup-button').length != 0)
+            return;
         var name = $('#document-title').text();
         if (name == '' || name.length == 0) {
             $('#save-document-popup').css('display', 'block');
