@@ -150,4 +150,13 @@ class ArrayOperationsTest < ActiveSupport::TestCase
     result = Interpreter.interpret(code)
     assert_equal(["[x] index 1 is out of bounds for array [1]"], result)
   end
+
+  test 'Array accessor assignment on nested modifies the array' do
+    code= 'a = [[[1]]]
+           a[0][0][0] = 2
+           print(a)'
+
+    result = Interpreter.interpret(code)
+    assert_equal([""], result)
+  end
 end

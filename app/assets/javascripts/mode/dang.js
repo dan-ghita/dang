@@ -20,8 +20,8 @@
         var keywords = wordObj([ "fun", "does", "with", "when", "then", "ow", "otherwise", "end", "select", "from", "do",
             "return", "print", "define", "as", "true", "false", "to", "none", "and", "where"
         ]);
-        var indentWords = wordObj(["fun", "do", "select", "when", "ow", "otherwise"]);
-        var dedentWords = wordObj(["end", "ow", "with", "otherwise"]);
+        var indentWords = wordObj(["fun", "from", "select", "when", "otherwise"]);
+        var dedentWords = wordObj(["end", "do", "with", "otherwise"]);
         var matching = {"[": "]", "{": "}", "(": ")"};
         var curPunc;
 
@@ -226,12 +226,12 @@
                 var firstChar = textAfter && textAfter.charAt(0);
                 var ct = state.context;
                 var closing = ct.type == matching[firstChar] ||
-                    (ct.type.lastIndexOf("keyword", 0) == 0) && /^(?:end|with|ow|otherwise|then|else|elsif|when|rescue)\b/.test(textAfter);
+                    (ct.type.lastIndexOf("keyword", 0) == 0) && /^(?:end|do|with|ow|otherwise|then|when)\b/.test(textAfter);
                 return ct.indented + (closing ? 0 : config.indentUnit) +
                     (state.continuedLine ? config.indentUnit : 0);
             },
 
-            electricInput: /^\s*(?:end|with|then|ow|otherwise||\})$/,
+            electricInput: /^\s*(?:end|do|with|then|ow|otherwise|\})$/,
             lineComment: "#"
         };
     });
